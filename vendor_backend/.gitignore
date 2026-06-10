@@ -1,0 +1,31 @@
+# logs
+*.log
+
+# env
+.env
+.env.*
+
+# system
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# node
+node_modules/
+
+# react native
+android/app/build/
+ios/build/
+ios/Pods/
+
+# laravel
+vendor/
+storage/*.key
+
+# builds
+dist/
+build/
+public/build/
