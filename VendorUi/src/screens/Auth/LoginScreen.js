@@ -19,6 +19,11 @@ export default function LoginScreen({ navigation }) {
 
   const loginVendor = async () => {
     try {
+      if (!email || !password) {
+        Alert.alert('Error', 'Please enter email and password');
+        return;
+      }
+
       setLoading(true);
 
       const response = await api.post('/login', {
@@ -30,16 +35,18 @@ export default function LoginScreen({ navigation }) {
 
       await saveToken(token);
 
-      global.setLoggedIn(true);
-
       Alert.alert('Success', 'Login Successful');
+
+      global.setLoggedIn?.(true);
+
+      navigation.replace('MainTabs'); // ya Dashboard/Home jo bhi route hai
     } catch (error) {
-      console.log(error?.response?.data);
+      console.log('Login Error:', error?.response?.data);
 
       Alert.alert(
         'Error',
-        error?.response?.data?.message ||
-          error?.response?.data?.error ||
+        error?.response?.data?.error ||
+          error?.response?.data?.message ||
           'Login Failed',
       );
     } finally {

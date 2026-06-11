@@ -44,16 +44,18 @@ export default function RegisterScreen({ navigation }) {
 
       Alert.alert('Success', 'Registration Successful', [
         {
-          text: 'OK',
+          text: 'Login Now',
           onPress: () => navigation.navigate('Login'),
         },
       ]);
     } catch (error) {
-      console.log(error?.response?.data);
+      console.log('Register Error:', error?.response?.data);
 
       Alert.alert(
         'Error',
-        error?.response?.data?.message || 'Registration Failed',
+        error?.response?.data?.message ||
+          error?.response?.data?.error ||
+          'Registration Failed',
       );
     } finally {
       setLoading(false);

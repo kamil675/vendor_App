@@ -36,22 +36,39 @@ public function register(Request $request)
     ]);
 }
 
-    public function login(Request $request)
+public function login(Request $request)
 {
-    $credentials = $request->only(
-        'email',
-        'password'
-    );
+    // 1. validate input
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-    if(!$token = auth('api')->attempt($credentials))
-    {
+    // 2. find user
+    $vendor = Vendor::where('email', $request->email)->first();
+
+    // 3. check user exists
+    if (!$vendor) {
         return response()->json([
-            'error'=>'Invalid Credentials'
-        ],401);
+            'error' => 'User not found'
+        ], 404);
     }
 
+    // 4. check password
+    if (!Hash::check($request->password, $vendor->password)) {
+        return response()->json([
+            'error' => 'Invalid Credentials'
+        ], 401);
+    }
+
+    // 5. generate JWT token
+    $token = JWTAuth::fromUser($vendor);
+
+    // 6. response
     return response()->json([
-        'token'=>$token
+        'message' => 'Login successful',
+        'token' => $token,
+        'user' => $vendor
     ]);
 }
 
